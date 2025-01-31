@@ -2,6 +2,8 @@ package testTradeArena.cep_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class CepApiApplication {
@@ -10,4 +12,8 @@ public class CepApiApplication {
 		SpringApplication.run(CepApiApplication.class, args);
 	}
 
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 }
