@@ -17,7 +17,6 @@ public class Endereco {
 
     public Endereco() {}
 
-    // TODO: Is string a better type for cep? Check this out;
     public Endereco(String cep, String logradouro, String complemento, String unidade, String bairro, String localidade, String uf, String estado, String regiao, String ibge, String gia, String ddd, String siafi) {
         this.cep = cep;
         this.logradouro = logradouro;
