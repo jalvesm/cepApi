@@ -1,5 +1,6 @@
 package testTradeArena.cep_api.controllerTest;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,8 +10,8 @@ import testTradeArena.cep_api.controller.CepController;
 import testTradeArena.cep_api.model.Endereco;
 import testTradeArena.cep_api.service.CepService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CepControllerTest {
@@ -21,15 +22,52 @@ class CepControllerTest {
     @InjectMocks
     private CepController cepController;
 
+    private Endereco enderecoMock;
+
+    @BeforeEach
+    void setUp() {
+        enderecoMock = new Endereco();
+        enderecoMock.setCep("01001000");
+        enderecoMock.setLogradouro("Praça da Sé");
+        enderecoMock.setBairro("Sé");
+        enderecoMock.setLocalidade("São Paulo");
+        enderecoMock.setUf("SP");
+    }
+
     @Test
-    void getEndereco_ValidCep_ReturnsEndereco() {
+    void getEndereco_WithValidCep_ShouldReturnEndereco() {
+
         String cep = "01001000";
-        Endereco endereco = new Endereco();
-        endereco.setCep(cep);
+        when(cepService.getEnderecoByCep(cep)).thenReturn(enderecoMock);
 
-        when(cepService.getEnderecoByCep(cep)).thenReturn(endereco);
+        Endereco resultado = cepController.getEndereco(cep);
 
-        Endereco result = cepController.getEndereco(cep);
-        assertEquals(cep, result.getCep());
+        assertNotNull(resultado);
+        assertEquals("01001000", resultado.getCep());
+        assertEquals("Praça da Sé", resultado.getLogradouro());
+        verify(cepService, times(1)).getEnderecoByCep(cep);
+    }
+
+    @Test
+    void getEndereco_CepWithLetters_ShouldThrowIllegalArgumentException() {
+
+        String cepInvalido = "ABC12345";
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> cepController.getEndereco(cepInvalido));
+
+        assertEquals("CEP inválido! Informe apenas números, sem traços ou letras.", exception.getMessage());
+        verify(cepService, never()).getEnderecoByCep(anyString());
+    }
+
+    @Test
+    void testGetEndereco_WithCepSmallerThan8Characters_ShouldThrowIllegalArgumentException() {
+        String shortCep = "12345";
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> cepController.getEndereco(shortCep));
+
+        assertEquals("CEP inválido! Você deve informar exatamente 8 números.", exception.getMessage());
+        verify(cepService, never()).getEnderecoByCep(anyString());
     }
 }
