@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -21,6 +22,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, "Endpoint não encontrado. Verifique a URL e tente novamente.");
+    }
+
 
     private ResponseEntity<Object> buildErrorResponse(HttpStatus status, String message) {
         Map<String, Object> errorDetails = new LinkedHashMap<>();

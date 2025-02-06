@@ -28,6 +28,9 @@ public class CepController {
             throw new IllegalArgumentException("CEP inválido! Você deve informar exatamente 8 números.");
         }
 
+        if (cep == null || cep.trim().isEmpty()) {
+            throw new IllegalArgumentException("CEP inválido! Informe um CEP válido.");
+        }
         return cepService.getEnderecoByCep(cep);
     }
 }
