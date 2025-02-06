@@ -31,6 +31,7 @@ public class CepController {
         if (cep == null || cep.trim().isEmpty()) {
             throw new IllegalArgumentException("CEP inválido! Informe um CEP válido.");
         }
+      
         return cepService.getEnderecoByCep(cep);
     }
 }
