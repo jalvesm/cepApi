@@ -20,12 +20,18 @@ public class CepController {
 
     @GetMapping("/{cep}")
     public Endereco getEndereco(@PathVariable String cep) {
-        Utils.validateCepFormat(cep);
-        Utils.validateCepLength(cep);
+        if (!Utils.isCepFormatValid(cep)) {
+            throw new IllegalArgumentException("CEP inválido! Informe apenas números, sem traços ou letras.");
+        };
+
+        if (!Utils.isCepLengthValid(cep)){
+            throw new IllegalArgumentException("CEP inválido! Você deve informar exatamente 8 números.");
+        }
 
         if (cep == null || cep.trim().isEmpty()) {
             throw new IllegalArgumentException("CEP inválido! Informe um CEP válido.");
         }
+      
         return cepService.getEnderecoByCep(cep);
     }
 }
