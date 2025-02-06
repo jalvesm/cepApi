@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, "Endpoint não encontrado. Verifique a URL e tente novamente.");
+        return buildErrorResponse(HttpStatus.NOT_FOUND, "Cep não encontrado. Verifique a URL e tente novamente.");
     }
 
 
